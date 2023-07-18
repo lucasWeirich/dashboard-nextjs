@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export default function LoadingInitial() {
-  return <div className="w-full h-screen bg-zinc-900 text-zinc-50 flex items-center justify-center fixed">
+  return <div className="w-full h-screen z-50 bg-zinc-900 text-zinc-50 flex items-center justify-center fixed">
     <div className="flex gap-2 hover:border-white">
       <div className="flex flex-col gap-2 animate-bounce">
         <div className="w-8 h-11 border-4 border-purple-800 rounded-lg shadow-sm shadow-zinc-950" />
