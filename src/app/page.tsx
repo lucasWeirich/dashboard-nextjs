@@ -1,9 +1,7 @@
 "use client"
 
-import useLightDarkTheme from "@/hooks/useLightDarkTheme"
-
 export default function Home() {
-  const themeToggle = useLightDarkTheme()
+  
 
   return (
     <div className="">
@@ -13,7 +11,6 @@ export default function Home() {
       </p>
 
      <br /><br />
-      <button onClick={themeToggle}>MUDAR THEME</button>
     </div>
   )
 }

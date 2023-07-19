@@ -2,31 +2,33 @@
 
 import { useEffect } from "react";
 
-export default function useLightDarkTheme() {
+export function useLightDarkTheme() {
   useEffect(() => {
     const isDark = {
       localStorage: localStorage.theme === 'dark',
       window: !('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches
     }
     const isLight = localStorage.theme === 'light'
+    const htmlClass = document.documentElement.classList
 
     if ((isDark.localStorage || isDark.window) && !isLight) {
-      document.documentElement.classList.add('dark');
+      htmlClass.add('dark');
     } else {
-      document.documentElement.classList.remove('dark');
+      htmlClass.remove('dark');
     }
   }, [])
+}
 
-  function themeToggle() {
-    const html = document.documentElement
-    html.classList.toggle('dark')
-    
-    if (html.className.includes('dark')) {
-      localStorage.theme = 'dark'
-    } else {
-      localStorage.theme = 'light'
-    }
-  };
+export function themeToggle() {
+  let themeNow = 'light' as 'dark' | 'light'
+  const html = document.documentElement
+  html.classList.toggle('dark')
 
-  return themeToggle
+  if (html.className.includes('dark')) {
+    themeNow = 'dark'
+  } else {
+    themeNow = 'light'
+  }
+
+  localStorage.theme = themeNow
 }
