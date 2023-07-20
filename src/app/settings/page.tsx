@@ -5,8 +5,8 @@ import HeaderTitle from "@/components/HeaderTitle";
 import Input from "@/components/Input";
 import ThemeToggle from "@/components/ThemeToggle";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { toast } from "react-toastify";
 import LoadingForm from "../loadings/loadingForm";
+import { toast } from "react-toastify";
 
 interface SettingsDataProps {
   company_name: string
@@ -24,7 +24,7 @@ const validationRule = {
 
 export default function Settings() {
   const [isLoading, setIsLoading] = useState(false)
-  const db_settings = JSON.parse(localStorage.getItem('settingsDashboard') || "{company_name: '', sales_goal: ''}") as SettingsDataProps
+  const db_settings = JSON.parse(localStorage.getItem('settingsDashboard') || '{"company_name": "", "sales_goal": ""}') as SettingsDataProps
   const [dataForm, setDataForm] = useState<SettingsDataProps>({
     company_name: db_settings.company_name,
     sales_goal: db_settings.sales_goal
