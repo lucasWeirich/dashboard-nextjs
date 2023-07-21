@@ -4,9 +4,10 @@ import Button from "@/components/Button";
 import HeaderTitle from "@/components/HeaderTitle";
 import Input from "@/components/Input";
 import ThemeToggle from "@/components/ThemeToggle";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import LoadingForm from "../loadings/loadingForm";
 import { toast } from "react-toastify";
+import { api } from "@/lib/api";
 
 interface SettingsDataProps {
   company_name: string
@@ -117,7 +118,7 @@ export default function Settings() {
         onChange={handleDataInput}
       />
 
-      <div className="">
+      <div>
         <Button
           type="submit"
           variant="primary"

@@ -1,4 +1,4 @@
-import { LayoutDashboard, LayoutPanelLeft, ShoppingBag, DollarSign, BarChartBig, Settings, Ban } from "lucide-react";
+import { LayoutDashboard, LayoutPanelLeft, ShoppingBag, DollarSign, BarChartBig, Settings, Ban, PackageOpen } from "lucide-react";
 import Link from "next/link";
 
 function LinkMenu({ link, label, children }: {
@@ -43,6 +43,15 @@ export default function SideBar() {
         link="/products"
         label="products">
         <ShoppingBag
+          size={stylesIconLinkMenu.size}
+          className={stylesIconLinkMenu.class}
+        />
+      </LinkMenu>
+      
+      <LinkMenu
+        link="/orders"
+        label="orders">
+        <PackageOpen
           size={stylesIconLinkMenu.size}
           className={stylesIconLinkMenu.class}
         />
