@@ -7,8 +7,10 @@ import LoadingInitial from './loadings/loadingInitial'
 import { useState, useEffect } from 'react'
 import SideBar from '@/components/SideBar'
 import { useLightDarkTheme } from '@/hooks/useLightDarkTheme'
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { usePathname, useRouter } from 'next/navigation'
+import Cookies from 'js-cookie';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,9 +24,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [loading, setLoading] = useState(true);
+  const router = useRouter()
+  const hasTokenCookie = !!Cookies.get('token');
+
+  const [loading, setLoading] = useState(true)
+  const pathname = usePathname()
+  const isLoginPage = pathname === '/login'
 
   useEffect(() => {
+    if (!hasTokenCookie && !isLoginPage)
+      router.push('/')
+
     if (document.readyState === 'complete')
       setLoading(false);
   }, []);
@@ -37,7 +47,11 @@ export default function RootLayout({
         {loading ? <LoadingInitial /> : null}
 
         {!loading && <>
-          <SideBar />
+
+          {!isLoginPage &&
+            <SideBar />
+          }
+
           <main className="overflow-x-auto w-full py-16 px-10">
             {children}
           </main>
