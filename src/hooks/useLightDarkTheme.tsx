@@ -1,34 +1,22 @@
 "use client"
 
-import { useEffect } from "react";
+import { api } from "@/lib/api";
+import { getUser } from "@/lib/auth";
+import Cookie from "js-cookie";
 
-export function useLightDarkTheme() {
-  useEffect(() => {
-    const isDark = {
-      localStorage: localStorage.theme === 'dark',
-      window: !('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches
+export async function themeToggle() {
+  const { sub } = getUser()
+
+  const token = Cookie.get('token')
+
+  const company = await api.patch(`company/theme/${sub}`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-    const isLight = localStorage.theme === 'light'
-    const htmlClass = document.documentElement.classList
+  })
 
-    if ((isDark.localStorage || isDark.window) && !isLight) {
-      htmlClass.add('dark');
-    } else {
-      htmlClass.remove('dark');
-    }
-  }, [])
-}
-
-export function themeToggle() {
-  let themeNow = 'light' as 'dark' | 'light'
-  const html = document.documentElement
-  html.classList.toggle('dark')
-
-  if (html.className.includes('dark')) {
-    themeNow = 'dark'
-  } else {
-    themeNow = 'light'
-  }
-
-  localStorage.theme = themeNow
+  Cookie.set('token', company.data.token)
+  
+  const htmlClass = document.documentElement.classList
+  htmlClass.toggle('dark')
 }
