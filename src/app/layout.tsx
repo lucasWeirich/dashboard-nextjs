@@ -72,7 +72,7 @@ export default function RootLayout({
           {/* ToastContainer precisa ficar dentro da verificação de loading para não interferir no loading */}
           <ToastContainer
             position="bottom-right"
-            theme={localStorage.theme || 'dark'}
+            theme={themeDark ? 'dark' : undefined}
             autoClose={3000}
           />
         </>

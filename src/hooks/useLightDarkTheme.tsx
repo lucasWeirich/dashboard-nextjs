@@ -1,7 +1,7 @@
 "use client"
 
 import { api } from "@/lib/api";
-import { getUser } from "@/lib/auth";
+import { getUser, setNewToken } from "@/lib/auth";
 import Cookie from "js-cookie";
 
 export async function themeToggle() {
@@ -15,7 +15,7 @@ export async function themeToggle() {
     }
   })
 
-  Cookie.set('token', company.data.token)
+  setNewToken(company.data.token)
   
   const htmlClass = document.documentElement.classList
   htmlClass.toggle('dark')

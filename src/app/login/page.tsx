@@ -5,8 +5,8 @@ import Input from "@/components/Input"
 import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
-import Cookie from 'js-cookie'
-import LoadingForm from "../loadings/loadingForm"
+import LoadingForm from "../loadings/loadingDefault"
+import { setNewToken } from "@/lib/auth"
 
 export default function Login() {
   const router = useRouter()
@@ -26,10 +26,7 @@ export default function Login() {
       const loginResponse = await api.post('/login', data);
       const { token } = loginResponse.data
 
-      Cookie.set('token', token, {
-        expires: 60 * 60 * 2, // 2h in seconds
-        path: '/'
-      })
+      setNewToken(token)
 
       router.push('/')
     } catch (err) {

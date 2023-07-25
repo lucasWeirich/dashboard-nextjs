@@ -4,51 +4,60 @@ import Button from "@/components/Button";
 import HeaderTitle from "@/components/HeaderTitle";
 import Input from "@/components/Input";
 import ThemeToggle from "@/components/ThemeToggle";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import LoadingForm from "../loadings/loadingForm";
+import { ChangeEvent, FormEvent, useState } from "react";
+import LoadingForm from "../loadings/loadingDefault";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api";
+import { getUser, setNewToken } from "@/lib/auth";
+import Cookie from 'js-cookie'
 
 interface SettingsDataProps {
-  company_name: string
-  sales_goal: string
+  name: string
+  sales_goal: number
 }
 interface SettingsDataIsValidProps {
-  company_name: boolean
+  name: boolean
   sales_goal: boolean
 }
 
 const validationRule = {
-  company_name: 10, // Number
+  name: 10, // Number
   sales_goal: 100    // Number
 }
 
 export default function Settings() {
   const [isLoading, setIsLoading] = useState(false)
-  const db_settings = JSON.parse(localStorage.getItem('settingsDashboard') || '{"company_name": "", "sales_goal": ""}') as SettingsDataProps
+  const company = getUser()
+
   const [dataForm, setDataForm] = useState<SettingsDataProps>({
-    company_name: db_settings.company_name,
-    sales_goal: db_settings.sales_goal
+    name: company.name,
+    sales_goal: company.sales_goal
   })
   const [isValidInputs, setIsValidInputs] = useState<SettingsDataIsValidProps>({
-    company_name: db_settings.company_name.length > validationRule.company_name,
-    sales_goal: Number(db_settings.sales_goal) >= validationRule.sales_goal
+    name: company.name.length > validationRule.name,
+    sales_goal: company.sales_goal >= validationRule.sales_goal
   });
 
-  function handleFormSettings(e: FormEvent<HTMLFormElement>) {
+  async function handleFormSettings(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      if (isValidInputs.company_name && isValidInputs.sales_goal) {
-        localStorage.setItem('settingsDashboard', JSON.stringify(dataForm))
-        toast.success("Updated settings!")
+    const token = Cookie.get('token')
 
-      } else {
-        toast.error("Error!")
-      }
+    try {
+      const companyUpdate = await api.put(`company/${company.sub}`,
+        dataForm,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      setNewToken(companyUpdate.data.token)
+      toast.success('Updated settings!')
     } catch (err) {
-      toast.error(`An error occurred while saving settings.`);
+      toast.error(`Error: ${err}`)
     } finally {
       setIsLoading(false)
     }
@@ -68,15 +77,15 @@ export default function Settings() {
   }
 
   function validationInputs(data: SettingsDataProps, name: keyof SettingsDataProps) {
-    const validateInput = Number(data[name].length || data[name]);
+    const validateInput = String(data[name])
 
     setIsValidInputs(prev => {
       const newValidate = {
         ...prev,
         [name]: name === 'sales_goal' ?
-          validateInput >= validationRule.sales_goal
+          Number(validateInput) >= validationRule.sales_goal
           :
-          validateInput > validationRule.company_name
+          validateInput.length > validationRule.name
       }
       return newValidate
     })
@@ -94,13 +103,13 @@ export default function Settings() {
     >
       <Input
         label="Company Name"
-        tagIdentity="company_name"
+        tagIdentity="name"
         placeholder="Company Happy"
         autoComplete="off"
         required
-        isValid={isValidInputs.company_name}
+        isValid={isValidInputs.name}
         messageInvalid="Company name must be at least 10 characters!"
-        value={dataForm.company_name}
+        value={dataForm.name}
         onChange={handleDataInput}
       />
 
@@ -118,12 +127,21 @@ export default function Settings() {
         onChange={handleDataInput}
       />
 
+      <Input
+        type="password"
+        label="New password   ( Option being developed )"
+        tagIdentity="new_password"
+        placeholder="*********"
+        autoComplete="off"
+        disabled
+      />
+
       <div>
         <Button
           type="submit"
           variant="primary"
           label="Save"
-          disabled={!(isValidInputs.company_name && isValidInputs.sales_goal)}
+          disabled={!(isValidInputs.name && isValidInputs.sales_goal)}
         />
       </div>
     </form>

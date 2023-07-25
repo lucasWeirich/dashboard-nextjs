@@ -1,5 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import Cookies from "js-cookie"
+import Cookie from 'js-cookie'
 
 interface User {
   sub: string
@@ -19,4 +20,11 @@ export function getUser(): User {
   const user: User = jwtDecode(token)
 
   return user
+}
+
+export function setNewToken(token: string) {
+  Cookie.set('token', token, {
+    path: '/',
+    expires: 60 * 60 * 2 // 2h
+  })
 }

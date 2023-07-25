@@ -17,7 +17,7 @@ export default function Input({
   placeholder,
   ...props
 }: InputProps) {
-  return <div className="flex flex-col relative">
+  return <div className={`flex flex-col relative ${props.disabled && 'opacity-20'}`}>
     <label
       htmlFor={tagIdentity}
       className={`font-mono text-lg`}
