@@ -23,8 +23,11 @@ export function getUser(): User {
 }
 
 export function setNewToken(token: string) {
+  const currentDate = new Date()
+  const expirationDate = new Date(currentDate.getTime() + 2 * 60 * 60 * 1000); // Adicionando 2 horas em milissegundos
+
   Cookie.set('token', token, {
     path: '/',
-    expires: 60 * 60 * 2 // 2h
+    expires: expirationDate
   })
 }
