@@ -2,11 +2,12 @@
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"
+import LoadingDefault from "../loadings/loadingDefault"
 import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
 import { FormEvent, useState } from "react"
-import LoadingForm from "../loadings/loadingDefault"
-import { setNewToken } from "@/lib/auth"
+import { getUser, setNewToken } from "@/lib/auth"
+import { toast } from "react-toastify"
 
 export default function Login() {
   const router = useRouter()
@@ -29,10 +30,11 @@ export default function Login() {
       setNewToken(token)
 
       router.push('/')
+      const { name } = getUser()
+      toast.success(`Welcome ${name}!`)
     } catch (err) {
       // Tratar erro de dados invalidos
-      alert('Error - Dados Inválidos')
-      console.log(err)
+      toast.error(`Dados Inválidos!`)
     } finally {
       setIsLoading(false)
     }
@@ -72,7 +74,7 @@ export default function Login() {
 
     {
       isLoading &&
-      <LoadingForm />
+      <LoadingDefault />
     }
   </>
 }

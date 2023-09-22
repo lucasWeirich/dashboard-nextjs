@@ -15,7 +15,7 @@ export default function Button({ label, variant, ...props }: ButtonProps) {
   return <button
     {...props}
     className={`
-        flex items-center text-white text-center h-9 px-7 rounded-lg lowercase text-lg tracking-[4px] disabled:opacity-60 transition-all
+        flex w-fit items-center text-white text-center h-9 px-7 rounded-lg lowercase text-lg tracking-[4px] disabled:opacity-60 transition-all
         ${!props.disabled && 'hover:skew-x-6 active:scale-[0.9]'}
         ${variantsClasses[variant]}
       `}

@@ -5,11 +5,12 @@ import HeaderTitle from "@/components/HeaderTitle";
 import Input from "@/components/Input";
 import ThemeToggle from "@/components/ThemeToggle";
 import { ChangeEvent, FormEvent, useState } from "react";
-import LoadingForm from "../loadings/loadingDefault";
+import LoadingDefault from "../loadings/loadingDefault";
 import { toast } from "react-toastify";
 import { api } from "@/lib/api";
 import { getUser, setNewToken } from "@/lib/auth";
-import Cookie from 'js-cookie'
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 interface SettingsDataProps {
   name: string
@@ -29,6 +30,8 @@ export default function Settings() {
   const [isLoading, setIsLoading] = useState(false)
   const company = getUser()
 
+  const router = useRouter();
+
   const [dataForm, setDataForm] = useState<SettingsDataProps>({
     name: company.name,
     sales_goal: company.sales_goal
@@ -42,7 +45,7 @@ export default function Settings() {
     e.preventDefault()
     setIsLoading(true)
 
-    const token = Cookie.get('token')
+    const token = Cookies.get('token')
 
     try {
       const companyUpdate = await api.put(`company/${company.sub}`,
@@ -57,6 +60,11 @@ export default function Settings() {
       setNewToken(companyUpdate.data.token)
       toast.success('Updated settings!')
     } catch (err) {
+      // @ts-ignore
+      if (err.response.status === 401) {
+        Cookies.remove('token');
+        router.push('/login');
+      }
       toast.error(`Error: ${err}`)
     } finally {
       setIsLoading(false)
@@ -158,7 +166,7 @@ export default function Settings() {
 
     {
       isLoading &&
-      <LoadingForm />
+      <LoadingDefault />
     }
   </>
 }
