@@ -20,22 +20,6 @@ interface ProductNew {
   quantity_in_stock: number
 }
 
-interface SettingsDataIsValidProps {
-  name: boolean
-  description: boolean,
-  image: boolean,
-  price: boolean,
-  quantity_in_stock: boolean
-}
-
-const validationRule = {
-  name: 10, // Number string
-  description: 100, // Number string
-  image: 1, // verificar a possibilidade do boolean
-  price: 1, // Number
-  quantity_in_stock: 1 // Number
-}
-
 export default function ProductNew() {
   const router = useRouter();
 
@@ -47,13 +31,6 @@ export default function ProductNew() {
     image: 'https://www.alfatronic.com.br/loja/assets/images/404.png',
     price: 0,
     quantity_in_stock: 0
-  });
-  const [isValidInputs, setIsValidInputs] = useState<SettingsDataIsValidProps>({
-    name: (product?.name.length || 0) > validationRule.name,
-    description: (product?.description.length || 0) > validationRule.description,
-    image: (product?.image.length || 0) > validationRule.image,
-    price: (product?.price || 0) > validationRule.price,
-    quantity_in_stock: (product?.quantity_in_stock || 0) > validationRule.quantity_in_stock,
   });
 
   const handleUploadImage = (e: ChangeEvent<HTMLInputElement>) => {
@@ -113,21 +90,6 @@ export default function ProductNew() {
       setIsLoading(false);
     }
   }
-
-  /* function validationInputs(data: ProductNew, name: keyof SettingsDataProps) {
-    const validateInput = String(data[name])
-
-    setIsValidInputs(prev => {
-      const newValidate = {
-        ...prev,
-        [name]: name === 'sales_goal' ?
-          Number(validateInput) >= validationRule.sales_goal
-          :
-          validateInput.length > validationRule.name
-      }
-      return newValidate
-    })
-  } */
 
   return <>
     <div className="grid grid-cols-2 items-end">
