@@ -211,7 +211,7 @@ export default function ProductDetails() {
                         {getStatusText(item.statusId)}
                       </td>
                     </tr>
-                  ))
+                  )).reverse()
                 }
               </tbody>
             </table>
@@ -239,7 +239,7 @@ export default function ProductDetails() {
                       <td className="px-2 py-1">{formatMoney(item.value || 0)}</td>
                       <td className="px-2 py-1">{formatDate(item.createdAt || '')}</td>
                     </tr>
-                  ))
+                  )).reverse()
                 }
               </tbody>
             </table>
