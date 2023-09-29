@@ -9,7 +9,7 @@ interface PaginatorProps {
 export default function Paginator({ pages, totalItems, onClickActived }: PaginatorProps) {
 
   const [qtd, setQtd] = useState(new Array(pages).fill(null));
-  const [actived, setActived] = useState(1);
+  const [actived, setActived] = useState(0);
 
   const handleClick = (index: number) => {
     onClickActived(index);
@@ -19,7 +19,7 @@ export default function Paginator({ pages, totalItems, onClickActived }: Paginat
   return <div className="flex justify-between items-center">
     <div className="flex items-center justify-center rounded-md w-fit overflow-hidden divide-x-[1px] divide-zinc-300 dark:divide-zinc-700 bg-zinc-200 dark:bg-zinc-800">
       {
-        qtd.map((page, index) => {
+        qtd.map((_, index) => {
           return < button
             key={index}
             onClick={() => handleClick(index)}

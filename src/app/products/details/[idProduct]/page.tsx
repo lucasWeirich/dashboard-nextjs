@@ -13,6 +13,12 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+interface OrderStatus {
+  id: number
+  label: string
+  color: string
+}
+
 export default function ProductDetails() {
   const pathname = useParams()
   const { idProduct } = pathname;
@@ -20,9 +26,34 @@ export default function ProductDetails() {
 
   const [isLoading, setIsLoading] = useState(false)
   const [product, setProduct] = useState<dataProduct>();
+  const [ordersStatus, setOrdersStatus] = useState<OrderStatus[]>([])
 
   const formatDate = useFormatDate;
   const formatMoney = useFormatMoney;
+
+  async function getOrdersStatus() {
+    setIsLoading(true);
+    const token = Cookies.get('token')
+
+    try {
+      const ordersStatus = await api.get('/orders_status', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      setOrdersStatus(ordersStatus.data)
+    } catch (err) {
+      // @ts-ignore
+      if (err.response.status === 401) {
+        Cookies.remove('token');
+        router.push('/login');
+      }
+      toast.error(`Error: ${err}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   async function getProduct() {
     setIsLoading(true);
@@ -50,11 +81,44 @@ export default function ProductDetails() {
   }
 
   useEffect(() => {
+    getOrdersStatus();
     getProduct();
   }, [])
 
   const handleLinkEdit = () => {
     router.push(`/products/edit/${idProduct}`);
+  }
+
+  const statusTextCache = new Map();
+  const getStatusText = (id: number) => {
+    if (statusTextCache.has(id)) {
+      return statusTextCache.get(id);
+    }
+
+    const status = ordersStatus.find((status) => status.id === id);
+
+    if (status) {
+      statusTextCache.set(id, status.label);
+      return status.label;
+    }
+
+    return 'undefined';
+  }
+
+  const statusColorCache = new Map();
+  const getStatusColor = (id: number) => {
+    if (statusColorCache.has(id)) {
+      return statusColorCache.get(id);
+    }
+
+    const status = ordersStatus.find((status) => status.id === id);
+
+    if (status) {
+      statusColorCache.set(id, status.color);
+      return status.color;
+    }
+
+    return '#333';
   }
 
   return <>
@@ -97,7 +161,7 @@ export default function ProductDetails() {
             <tbody>
               <tr className="text-sm border-2 border-zinc-200 dark:border-zinc-700 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
                 <th className="text-start p-2 bg-zinc-100 dark:bg-zinc-800">Price</th>
-                <td className="px-2 py-1">{product?.price}</td>
+                <td className="px-2 py-1">{useFormatMoney(Number(product?.price))}</td>
               </tr>
               <tr className="text-sm border-2 border-zinc-200 dark:border-zinc-700 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
                 <th className="text-start p-2 bg-zinc-100 dark:bg-zinc-800">Quantity in stock</th>
@@ -127,8 +191,8 @@ export default function ProductDetails() {
               <thead className="bg-zinc-100 dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
                 <th className="p-2">Quantity</th>
                 <th className="p-2">Value</th>
-                <th className="p-2">Status</th>
                 <th className="p-2">Date</th>
+                <th className="p-2">Status</th>
               </thead>
               <tbody>
                 {
@@ -139,8 +203,13 @@ export default function ProductDetails() {
                     >
                       <td className="px-2 py-1">{item.quantity}</td>
                       <td className="px-2 py-1">{formatMoney(item.value || 0)}</td>
-                      <td className="px-2 py-1">{item.statusId}</td>
                       <td className="px-2 py-1">{formatDate(item.createdAt || '')}</td>
+                      <td
+                        className="px-2 py-1"
+                        style={{ background: getStatusColor(item.statusId) }}
+                      >
+                        {getStatusText(item.statusId)}
+                      </td>
                     </tr>
                   ))
                 }

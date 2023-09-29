@@ -25,7 +25,7 @@ export default function Input({
       {label}
     </label>
 
-    <div className="flex items-center gap-1 border-b-2 border-zinc-500 max-w-xs">
+    <div className="flex items-center gap-1 max-w-xs">
       {
         modifiedType === 'dolar' &&
         <span className="text-sm font-mono">
@@ -38,7 +38,7 @@ export default function Input({
         id={tagIdentity}
         name={tagIdentity}
         placeholder={placeholder}
-        className="text-sm bg-transparent outline-none w-full h-7 appearance-none focus:border-purple-500 transition-all"
+        className="text-sm bg-transparent outline-none w-full h-7 appearance-none border-b-2 border-zinc-500 focus:border-purple-500 transition-all"
       />
     </div>
 

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import LoadingDefault from "../loadings/loadingDefault";
+import Input  from "@/components/Input";
 
 interface ProductTable {
   id: string
@@ -24,6 +25,8 @@ interface ProductTable {
 export default function Produtcs() {
   const [isLoading, setIsLoading] = useState(false)
   const [products, setProducts] = useState<ProductTable[][]>([[]])
+  const [allProducts, setAllProducts] = useState<ProductTable[]>([])
+  const [filter, setFilter] = useState('')
   const [pagination, setPagination] = useState({
     itemsPerPage: 10,
     pageActived: 0,
@@ -43,24 +46,8 @@ export default function Produtcs() {
         }
       })
 
-      const qtdPages = Math.ceil((products.data).length / pagination.itemsPerPage);
-      setPagination(prev => {
-        return {
-          ...prev,
-          qtdPages: qtdPages,
-          items: products.data.length
-        }
-      })
-      const paginatedProducts = [];
-
-      for (let i = 0; i < qtdPages; i++) {
-        const start = i * pagination.itemsPerPage;
-        const end = start + pagination.itemsPerPage;
-        const group = products.data.slice(start, end);
-        paginatedProducts.push(group);
-      }
-
-      setProducts(paginatedProducts)
+      setAllProducts(products.data)
+      paginationProduct(products.data)
     } catch (err) {
       // @ts-ignore
       if (err.response.status === 401) {
@@ -71,7 +58,7 @@ export default function Produtcs() {
     } finally {
       setIsLoading(false)
     }
-  }
+  } 
 
   useEffect(() => {
     getProducts()
@@ -84,7 +71,7 @@ export default function Produtcs() {
   const handleClickEditProduct = (id: string) => {
     router.push(`/products/edit/${id}`);
   }
-  
+
   const handleClickNewProduct = () => {
     router.push(`/products/new`);
   }
@@ -120,6 +107,46 @@ export default function Produtcs() {
     }
   }
 
+  const paginationProduct = (data: ProductTable[]) => {
+    const qtdPages = Math.ceil((data).length / pagination.itemsPerPage);
+    setPagination(prev => {
+      return {
+        ...prev,
+        qtdPages: qtdPages,
+        items: data.length
+      }
+    })
+    const paginatedOrders = [];
+
+    for (let i = 0; i < qtdPages; i++) {
+      const start = i * pagination.itemsPerPage;
+      const end = start + pagination.itemsPerPage;
+      const group = data.slice(start, end);
+      paginatedOrders.push(group);
+    }
+
+    setProducts(paginatedOrders)
+  }
+
+  const handleChangeFilter = () => {
+    const newProduct = allProducts.filter((product: ProductTable) => {
+      return product && product.name.toLowerCase().includes(filter);
+    });
+
+    setPagination(prev => {
+      return {
+        ...prev,
+        pageActived: 0
+      }
+    })
+    paginationProduct(newProduct)
+  }
+
+  useEffect(() => {
+    handleChangeFilter()
+  }, [filter])
+
+
   return <>
     <div className="grid grid-cols-2 items-end">
       <HeaderTitle
@@ -134,6 +161,15 @@ export default function Produtcs() {
           onClick={handleClickNewProduct}
         />
       </div>
+    </div>
+
+    <div className="mb-10">
+      <Input
+        label="Filter"
+        tagIdentity="search_order"
+        onChange={(e) => setFilter(e.target.value)}
+        placeholder="Search the product..."
+      />
     </div>
 
     {
@@ -193,7 +229,7 @@ export default function Produtcs() {
           </tbody>
         </table>
         :
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">No products registered!</p>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">No products found!</p>
     }
 
     {
