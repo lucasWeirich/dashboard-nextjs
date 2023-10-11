@@ -102,7 +102,6 @@ export default function Sales() {
     handleChangeFilter()
   }, [filter])
 
-
   useEffect(() => {
     getSales()
   }, [])
@@ -112,7 +111,7 @@ export default function Sales() {
   }
 
   return <>
-    <div className="grid grid-cols-2 items-end">
+    <div className="flex justify-between gap-10">
       <HeaderTitle
         title="Sales"
         label="Manage all available sales"
@@ -143,7 +142,7 @@ export default function Sales() {
             <th className="p-3 text-center">Product</th>
             <th className="p-3 text-center">Quantity</th>
             <th className="p-3 text-center">Value</th>
-            <th className="p-3 text-center">Created/Modified</th>
+            <th className="p-3 text-center">Updated</th>
           </thead>
           <tbody className="divide-y-2 divide-zinc-200 dark:divide-zinc-700">
             {

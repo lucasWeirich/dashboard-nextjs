@@ -148,7 +148,7 @@ export default function Produtcs() {
 
 
   return <>
-    <div className="grid grid-cols-2 items-end">
+    <div className="flex justify-between gap-10">
       <HeaderTitle
         title="Products"
         label="Manage all available products"

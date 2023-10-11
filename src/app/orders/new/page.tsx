@@ -178,7 +178,7 @@ export default function NewOrder() {
   }, [order?.productId])
 
   return <>
-    <div className="grid grid-cols-2 items-end">
+    <div className="flex justify-between gap-10">
       <HeaderTitle
         title="New Order"
       />

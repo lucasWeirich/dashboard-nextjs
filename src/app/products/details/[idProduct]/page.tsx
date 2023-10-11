@@ -121,8 +121,12 @@ export default function ProductDetails() {
     return '#333';
   }
 
+  const getSales = () => {
+    return Number(product?.Order.filter(order => order.statusId === 2).length)
+  }
+
   return <>
-    <div className="grid grid-cols-2 items-end">
+    <div className="flex justify-between gap-10">
       <HeaderTitle
         title={product?.name || 'Undefind'}
       />
@@ -176,8 +180,8 @@ export default function ProductDetails() {
                 <td className="px-2 py-1">{product?.Order.length}</td>
               </tr>
               <tr className="text-sm border-2 border-zinc-200 dark:border-zinc-700 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
-                <th className="text-start p-2 bg-zinc-100 dark:bg-zinc-800">{Number(product?.Sales.length) > 1 ? 'Sales' : 'Sale'}</th>
-                <td className="px-2 py-1">{product?.Sales.length}</td>
+                <th className="text-start p-2 bg-zinc-100 dark:bg-zinc-800">Sales</th>
+                <td className="px-2 py-1">{getSales()}</td>
               </tr>
             </tbody>
           </table>
@@ -221,7 +225,7 @@ export default function ProductDetails() {
         {
           product?.Sales[0] &&
           <div>
-            <h4 className="text-base font-semibold mb-2">{product.Sales.length > 1 ? 'Sales' : 'Sale'}:</h4>
+            <h4 className="text-base font-semibold mb-2">Sales:</h4>
             <table className="table-fixed w-full h-fit text-center">
               <thead className="bg-zinc-100 dark:bg-zinc-800 border-2 border-zinc-200 dark:border-zinc-700 divide-x-2 divide-zinc-200 dark:divide-zinc-700">
                 <th className="p-2">Quantity</th>

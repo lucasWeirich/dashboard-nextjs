@@ -5,7 +5,7 @@ interface HeaderTitleProps {
 
 export default function HeaderTitle({ title, label }: HeaderTitleProps) {
   return <header className="flex flex-col gap-1 mb-14">
-    <h2 className="text-[2rem] leading-tight font-mono font-bold first-letter:uppercase lowercase">
+    <h2 className="text-[2rem] leading-tight font-mono font-bold">
       {title}
     </h2>
     {

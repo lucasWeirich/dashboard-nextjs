@@ -101,7 +101,7 @@ export default function Settings() {
 
   return <>
     <HeaderTitle
-      title="settings"
+      title="Settings"
       label="Configure application settings"
     />
 
