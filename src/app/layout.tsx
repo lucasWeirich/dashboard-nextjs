@@ -1,7 +1,6 @@
 "use client"
 
 import './globals.css'
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import LoadingInitial from './loadings/loadingInitial'
 import { useState, useEffect } from 'react'
@@ -14,16 +13,16 @@ import { getUser } from '@/lib/auth'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Dashboard',
-  description: 'Dashboard in NextJS | Tailwind CSS',
-}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  useEffect(() => {
+    document.title = 'Dashboard'
+  }, [])
+
   const router = useRouter()
   const hasTokenCookie = !!Cookies.get('token');
 
