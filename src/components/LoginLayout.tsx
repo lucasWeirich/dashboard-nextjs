@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Inter } from 'next/font/google';
-import { useLightDarkTheme } from '@/hooks/useLightDarkTheme';
+import { themeToggle } from '@/hooks/useLightDarkTheme';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -15,7 +15,7 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
     if (document.readyState === 'complete') setLoading(false);
   }, []);
 
-  useLightDarkTheme();
+  themeToggle();
 
   return (
     <html lang="en">
